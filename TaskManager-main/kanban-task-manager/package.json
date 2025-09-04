@@ -1,0 +1,16 @@
+{
+  "name": "kanban-task-manager",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "cd server && npm start",
+    "build": "npm run install-server",
+    "install-server": "cd server && npm install",
+    "postinstall": "npm run install-server"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

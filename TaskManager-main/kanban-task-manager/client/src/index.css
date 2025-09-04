@@ -1,0 +1,431 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+  color: #1e293b;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Button styles */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background-color: var(--turquoise);
+  color: var(--text-primary);
+  border: 1px solid var(--turquoise-dark);
+}
+
+.btn-primary:hover {
+  background-color: var(--turquoise-dark);
+}
+
+.btn-secondary {
+  background-color: var(--peach);
+  color: #92400e;
+  border: 1px solid var(--peach-dark);
+}
+
+.btn-secondary:hover {
+  background-color: var(--peach-dark);
+}
+
+.btn-danger {
+  background-color: var(--rosewater);
+  color: #991b1b;
+  border: 1px solid var(--rosewater-dark);
+}
+
+.btn-danger:hover {
+  background-color: var(--rosewater-dark);
+}
+
+/* Input styles */
+.input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--turquoise);
+  box-shadow: 0 0 0 3px rgba(143, 221, 231, 0.1);
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--bg-primary);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Priority colors */
+.priority-low {
+  background-color: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.priority-medium {
+  background-color: #fefce8;
+  color: #a16207;
+  border: 1px solid #fde047;
+}
+
+.priority-high {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.priority-urgent {
+  background-color: #fdf2f8;
+  color: #be185d;
+  border: 1px solid #fbcfe8;
+}
+
+/* Task Carousel Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Enhanced Button Animations */
+.btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Enhanced Input Animations */
+.input {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(143, 221, 231, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Modal Animations */
+.modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Enhanced List Animations */
+.task-list-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.task-list-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease-out;
+}
+
+.task-list-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.task-list-exit-active {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease-out;
+}
+
+/* New Color Palette Variables */
+:root {
+  /* Light Mode Colors */
+  --rosewater: #ffc2c7;
+  --spearmint: #b6e5d8;
+  --peach: #fbe5c8;
+  --turquoise: #8fdde7;
+  --rosewater-dark: #ffa8b0;
+  --spearmint-dark: #9dd4c7;
+  --peach-dark: #f7d4a8;
+  --turquoise-dark: #6bc7d1;
+  
+  /* Light Mode Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border-color: #e5e7eb;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Theme */
+.dark {
+  /* Dark Mode Theme Colors - Grey Palette */
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --bg-tertiary: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --border-color: #4b5563;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode for entire viewport */
+.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.dark #root {
+  background-color: #111827;
+}
+
+/* Notification Styles */
+.notification-urgent {
+  background-color: var(--rosewater);
+  border-color: var(--rosewater-dark);
+  color: #991b1b;
+}
+
+.notification-high {
+  background-color: var(--rosewater-dark);
+  border-color: #ff8a8a;
+  color: #dc2626;
+}
+
+.notification-medium {
+  background-color: var(--peach);
+  border-color: var(--peach-dark);
+  color: #92400e;
+}
+
+.notification-low {
+  background-color: var(--spearmint);
+  border-color: var(--spearmint-dark);
+  color: #065f46;
+}
+
+/* Drag and Drop Styles */
+[data-rbd-draggable-id] {
+  z-index: 1;
+}
+
+[data-rbd-droppable-id] {
+  position: relative;
+  z-index: 1;
+}
+
+/* Portal drag preview styles */
+.drag-preview {
+  position: fixed !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
+  transform: rotate(5deg) !important;
+  opacity: 0.8 !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3) !important;
+}
+
