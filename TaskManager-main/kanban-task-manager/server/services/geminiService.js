@@ -7,12 +7,17 @@ class GeminiService {
       throw new Error('GOOGLE_API_KEY or GEMINI_API_KEY environment variable is required');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Try different models in order of preference
+    this.modelNames = ["gemini-pro", "gemini-1.5-flash", "gemini-1.5-pro"];
+    this.model = this.genAI.getGenerativeModel({ model: this.modelNames[0] });
   }
 
   async generateBoardStructure(prompt) {
-    try {
-      const systemPrompt = `You are a project management AI assistant. Given a user prompt describing a project or task, generate a comprehensive Kanban board structure with lists, tasks, and subtasks.
+    for (const modelName of this.modelNames) {
+      try {
+        console.log(`Trying model: ${modelName}`);
+        const model = this.genAI.getGenerativeModel({ model: modelName });
+        const systemPrompt = `You are a project management AI assistant. Given a user prompt describing a project or task, generate a comprehensive Kanban board structure with lists, tasks, and subtasks.
 
 Return ONLY a valid JSON object with this exact structure:
 {
@@ -51,33 +56,43 @@ Guidelines:
 
 User prompt: ${prompt}`;
 
-      const result = await this.model.generateContent(systemPrompt);
-      const response = await result.response;
-      const text = response.text();
-      
-      // Extract JSON from the response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No valid JSON found in AI response');
+        const result = await model.generateContent(systemPrompt);
+        const response = await result.response;
+        const text = response.text();
+        
+        // Extract JSON from the response
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          throw new Error('No valid JSON found in AI response');
+        }
+        
+        const boardData = JSON.parse(jsonMatch[0]);
+        
+        // Validate the structure
+        if (!boardData.boardTitle || !boardData.lists || !Array.isArray(boardData.lists)) {
+          throw new Error('Invalid board structure generated');
+        }
+        
+        console.log(`Successfully generated board using model: ${modelName}`);
+        return boardData;
+      } catch (error) {
+        console.error(`Model ${modelName} failed:`, error.message);
+        if (modelName === this.modelNames[this.modelNames.length - 1]) {
+          // Last model failed, throw the error
+          throw new Error('All models failed: ' + error.message);
+        }
+        // Continue to next model
+        continue;
       }
-      
-      const boardData = JSON.parse(jsonMatch[0]);
-      
-      // Validate the structure
-      if (!boardData.boardTitle || !boardData.lists || !Array.isArray(boardData.lists)) {
-        throw new Error('Invalid board structure generated');
-      }
-      
-      return boardData;
-    } catch (error) {
-      console.error('Gemini API Error:', error);
-      throw new Error('Failed to generate board structure: ' + error.message);
     }
   }
 
   async generateTaskSuggestions(boardTitle, currentTasks) {
-    try {
-      const systemPrompt = `You are a project management AI assistant. Given a board title and current tasks, suggest 3-5 additional relevant tasks.
+    for (const modelName of this.modelNames) {
+      try {
+        console.log(`Trying model for suggestions: ${modelName}`);
+        const model = this.genAI.getGenerativeModel({ model: modelName });
+        const systemPrompt = `You are a project management AI assistant. Given a board title and current tasks, suggest 3-5 additional relevant tasks.
 
 Board: ${boardTitle}
 Current tasks: ${currentTasks.map(t => t.title).join(', ')}
@@ -99,19 +114,26 @@ Return ONLY a valid JSON array:
   }
 ]`;
 
-      const result = await this.model.generateContent(systemPrompt);
-      const response = await result.response;
-      const text = response.text();
-      
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) {
-        throw new Error('No valid JSON array found in AI response');
+        const result = await model.generateContent(systemPrompt);
+        const response = await result.response;
+        const text = response.text();
+        
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+          throw new Error('No valid JSON array found in AI response');
+        }
+        
+        console.log(`Successfully generated suggestions using model: ${modelName}`);
+        return JSON.parse(jsonMatch[0]);
+      } catch (error) {
+        console.error(`Model ${modelName} failed for suggestions:`, error.message);
+        if (modelName === this.modelNames[this.modelNames.length - 1]) {
+          // Last model failed, throw the error
+          throw new Error('All models failed for suggestions: ' + error.message);
+        }
+        // Continue to next model
+        continue;
       }
-      
-      return JSON.parse(jsonMatch[0]);
-    } catch (error) {
-      console.error('Gemini API Error:', error);
-      throw new Error('Failed to generate task suggestions: ' + error.message);
     }
   }
 }
