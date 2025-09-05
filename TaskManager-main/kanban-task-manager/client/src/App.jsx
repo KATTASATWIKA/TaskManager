@@ -9,6 +9,13 @@ import Board from './pages/Board'
 import Layout from './components/Layout'
 import Landing from './pages/Landing'
 
+function ProtectedRoute({ user, children }) {
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
+  return children
+}
+
 function App() {
   const { user, loading, init } = useAuthStore()
 
@@ -37,16 +44,21 @@ function App() {
         <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
 
-        {/* Authenticated app */}
-        {user && (
-          <Route path="/" element={<Layout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="board/:id" element={<Board />} />
-          </Route>
-        )}
+        {/* Authenticated routes */}
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute user={user}>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="board/:id" element={<Board />} />
+        </Route>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to={user ? '/dashboard' : '/'} />} />
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to={user ? '/dashboard' : '/'} replace />} />
       </Routes>
     </ThemeProvider>
   )
