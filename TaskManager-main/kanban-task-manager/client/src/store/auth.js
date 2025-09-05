@@ -7,10 +7,12 @@ const useAuthStore = create((set, get) => ({
 
   // Initialize auth state
   init: async () => {
+    set({ loading: true })
     try {
       const response = await authAPI.getMe()
       set({ user: response.data, loading: false })
     } catch (error) {
+      console.log('Auth check failed:', error.response?.status)
       set({ user: null, loading: false })
     }
   },
@@ -19,7 +21,7 @@ const useAuthStore = create((set, get) => ({
   login: async (email, password) => {
     try {
       const response = await authAPI.login(email, password)
-      set({ user: response.data })
+      set({ user: response.data, loading: false })
       return { success: true }
     } catch (error) {
       return { 
@@ -33,7 +35,7 @@ const useAuthStore = create((set, get) => ({
   register: async (name, email, password) => {
     try {
       const response = await authAPI.register(name, email, password)
-      set({ user: response.data })
+      set({ user: response.data, loading: false })
       return { success: true }
     } catch (error) {
       return { 

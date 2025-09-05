@@ -32,13 +32,14 @@ res.json({ id: user._id, email: user.email, name: user.name });
 
 router.get('/me', async (req,res) => {
 const token = req.cookies?.accessToken;
-if (!token) return res.status(200).json(null);
+if (!token) return res.status(401).json({ message: 'No token provided' });
 try {
 const { sub } = jwt.verify(token, process.env.JWT_SECRET);
 const user = await User.findById(sub).select('name email');
+if (!user) return res.status(401).json({ message: 'User not found' });
 res.json(user);
-} catch {
-res.status(200).json(null);
+} catch (error) {
+res.status(401).json({ message: 'Invalid token' });
 }
 });
 
