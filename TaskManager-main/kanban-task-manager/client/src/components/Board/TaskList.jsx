@@ -316,6 +316,13 @@ function TaskList({
                         task={task}
                         onClick={() => onOpenTask(task)}
                         isDragging={snapshot.isDragging}
+                        onToggleSubtasks={async (nextSubtasks) => {
+                          try {
+                            await onUpdateTask(task._id, { subtasks: nextSubtasks })
+                          } catch (e) {
+                            console.error('Failed to update subtasks', e)
+                          }
+                        }}
                       />
                     </DragHandle>
                   </div>

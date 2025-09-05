@@ -1,7 +1,7 @@
 import { format, isAfter, isBefore, isToday, isTomorrow } from 'date-fns'
 import { Calendar, Flag, Tag } from 'lucide-react'
 
-function TaskCard({ task, onClick, isDragging }) {
+function TaskCard({ task, onClick, isDragging, onToggleSubtasks }) {
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'urgent': return '#991b1b'
@@ -215,14 +215,16 @@ function TaskCard({ task, onClick, isDragging }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {task.subtasks.slice(0, 3).map((st, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  width: 14, height: 14, borderRadius: 3,
-                  border: '1px solid #cbd5e1', backgroundColor: st.done ? '#b6e5d8' : '#ffffff',
-                  color: st.done ? '#065f46' : '#94a3b8', fontSize: 10, fontWeight: 700
-                }}>
-                  {st.done ? '✓' : ''}
-                </span>
+                <input
+                  type="checkbox"
+                  checked={!!st.done}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => {
+                    const next = task.subtasks.map((s, i) => i === idx ? { ...s, done: e.target.checked } : s)
+                    if (onToggleSubtasks) onToggleSubtasks(next)
+                  }}
+                  style={{ width: 14, height: 14 }}
+                />
                 <span style={{ fontSize: 11, color: st.done ? '#64748b' : '#475569', textDecoration: st.done ? 'line-through' : 'none' }}>
                   {st.title}
                 </span>
