@@ -13,6 +13,11 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'TaskManager API is running!', status: 'success' });
+});
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/boards', require('./routes/boards'));
 app.use('/api/lists', require('./routes/lists'));
