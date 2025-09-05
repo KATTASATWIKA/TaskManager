@@ -278,7 +278,7 @@ function Dashboard() {
                     {task.priority} Priority
                   </div>
                   <Link
-                    to={`/board/${task.boardId}`}
+                    to={`/dashboard/board/${task.boardId}`}
                     style={{
                       fontSize: '12px',
                       color: '#8fdde7',
@@ -451,7 +451,7 @@ function Dashboard() {
                      {sortedBoards.map((board, index) => (
              <Link
                key={board._id}
-               to={`/board/${board._id}`}
+               to={`/dashboard/board/${board._id}`}
                style={{
                  display: 'block',
                  padding: '24px',
