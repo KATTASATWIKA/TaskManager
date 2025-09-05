@@ -202,6 +202,17 @@ function TaskCard({ task, onClick, isDragging }) {
         </div>
       )}
 
+      {/* Subtasks summary */}
+      {task.subtasks && task.subtasks.length > 0 && (
+        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>
+          {(() => {
+            const done = task.subtasks.filter(s => s.done).length
+            const total = task.subtasks.length
+            return `${done}/${total} subtasks`
+          })()}
+        </div>
+      )}
+
       {/* Footer */}
       <div style={{
         display: 'flex',
