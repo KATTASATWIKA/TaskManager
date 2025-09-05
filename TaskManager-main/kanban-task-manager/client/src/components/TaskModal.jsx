@@ -8,9 +8,11 @@ function TaskModal({ task, onClose, onSave, onDelete }) {
     description: '',
     dueDate: '',
     priority: 'medium',
-    labels: []
+    labels: [],
+    subtasks: []
   })
   const [newLabel, setNewLabel] = useState('')
+  const [newSubtask, setNewSubtask] = useState('')
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
@@ -21,7 +23,8 @@ function TaskModal({ task, onClose, onSave, onDelete }) {
         description: task.description || '',
         dueDate: task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : '',
         priority: task.priority || 'medium',
-        labels: task.labels || []
+        labels: task.labels || [],
+        subtasks: task.subtasks || []
       })
     }
   }, [task])
@@ -320,6 +323,86 @@ function TaskModal({ task, onClose, onSave, onDelete }) {
                         <X size={12} />
                       </button>
                     </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Subtasks */}
+            <div>
+              <label style={{ display: 'block', marginBottom: '6px', fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+                Subtasks
+              </label>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                <input
+                  type="text"
+                  value={newSubtask}
+                  onChange={(e) => setNewSubtask(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), newSubtask.trim() && setFormData(prev => ({ ...prev, subtasks: [...prev.subtasks, { title: newSubtask.trim(), done: false }] })), setNewSubtask(''))}
+                  className="input"
+                  placeholder="Add a subtask..."
+                  style={{ width: '100%' }}
+                />
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    if (!newSubtask.trim()) return
+                    setFormData(prev => ({ ...prev, subtasks: [...prev.subtasks, { title: newSubtask.trim(), done: false }] }))
+                    setNewSubtask('')
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+
+              {formData.subtasks.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {/* Progress */}
+                  <div style={{ marginBottom: '6px' }}>
+                    {(() => {
+                      const done = formData.subtasks.filter(s => s.done).length
+                      const total = formData.subtasks.length
+                      const pct = Math.round((done / total) * 100)
+                      return (
+                        <div>
+                          <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>{done}/{total} completed</div>
+                          <div style={{ height: 8, background: '#e5e7eb', borderRadius: 999 }}>
+                            <div style={{ width: `${pct}%`, height: '100%', background: '#8fdde7', borderRadius: 999 }} />
+                          </div>
+                        </div>
+                      )
+                    })()}
+                  </div>
+
+                  {formData.subtasks.map((st, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={!!st.done}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          subtasks: prev.subtasks.map((s, i) => i === idx ? { ...s, done: e.target.checked } : s)
+                        }))}
+                      />
+                      <input
+                        type="text"
+                        value={st.title}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          subtasks: prev.subtasks.map((s, i) => i === idx ? { ...s, title: e.target.value } : s)
+                        }))}
+                        className="input"
+                        style={{ flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, subtasks: prev.subtasks.filter((_, i) => i !== idx) }))}
+                        className="btn btn-secondary"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}

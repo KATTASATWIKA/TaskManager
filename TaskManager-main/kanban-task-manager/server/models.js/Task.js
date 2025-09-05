@@ -9,6 +9,11 @@ description: { type: String },
 dueDate: { type: Date },
 priority: { type: String, enum: ['low','medium','high','urgent'], default: 'medium' },
 labels: [{ type: String }], // color codes or text labels
+subtasks: [{
+  title: { type: String, required: true },
+  done: { type: Boolean, default: false },
+  _id: false
+}],
 }, { timestamps: true });
 
 
