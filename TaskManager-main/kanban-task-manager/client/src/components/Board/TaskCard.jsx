@@ -64,6 +64,8 @@ function TaskCard({ task, onClick, isDragging }) {
           // Show hover overlay
           const overlay = e.currentTarget.querySelector('[data-hover-overlay]')
           if (overlay) overlay.style.opacity = '1'
+          const hint = e.currentTarget.querySelector('[data-drag-hint]')
+          if (hint) hint.style.opacity = '1'
         }
       }}
       onMouseLeave={(e) => {
@@ -74,6 +76,8 @@ function TaskCard({ task, onClick, isDragging }) {
           // Hide hover overlay
           const overlay = e.currentTarget.querySelector('[data-hover-overlay]')
           if (overlay) overlay.style.opacity = '0'
+          const hint = e.currentTarget.querySelector('[data-drag-hint]')
+          if (hint) hint.style.opacity = '0'
         }
       }}
     >
@@ -92,6 +96,26 @@ function TaskCard({ task, onClick, isDragging }) {
           pointerEvents: 'none'
         }} 
       />
+      {/* Drag Hint */}
+      <div
+        data-drag-hint
+        style={{
+          position: 'absolute',
+          bottom: 8,
+          right: 8,
+          fontSize: 10,
+          color: '#64748b',
+          backgroundColor: 'rgba(241,245,249,0.9)',
+          border: '1px solid #e2e8f0',
+          borderRadius: 6,
+          padding: '2px 6px',
+          opacity: 0,
+          transition: 'opacity 0.2s ease',
+          pointerEvents: 'none'
+        }}
+      >
+        Drag to move
+      </div>
       {/* Priority Badge */}
       {task.priority && task.priority !== 'medium' && (
         <div style={{

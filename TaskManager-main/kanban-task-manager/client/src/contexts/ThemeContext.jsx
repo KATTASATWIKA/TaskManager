@@ -19,10 +19,14 @@ export const ThemeProvider = ({ children }) => {
     }
     return false // Default to light mode
   })
+  const [isHighContrast, setIsHighContrast] = useState(() => {
+    return localStorage.getItem('high-contrast') === 'true'
+  })
 
   useEffect(() => {
     // Update localStorage when theme changes
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light')
+    localStorage.setItem('high-contrast', String(isHighContrast))
     
     // Update document class for CSS variables
     if (isDarkMode) {
@@ -30,15 +34,25 @@ export const ThemeProvider = ({ children }) => {
     } else {
       document.documentElement.classList.remove('dark')
     }
-  }, [isDarkMode])
+    if (isHighContrast) {
+      document.documentElement.classList.add('high-contrast')
+    } else {
+      document.documentElement.classList.remove('high-contrast')
+    }
+  }, [isDarkMode, isHighContrast])
 
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev)
   }
+  const toggleHighContrast = () => {
+    setIsHighContrast(prev => !prev)
+  }
 
   const value = {
     isDarkMode,
-    toggleTheme
+    isHighContrast,
+    toggleTheme,
+    toggleHighContrast
   }
 
   return (

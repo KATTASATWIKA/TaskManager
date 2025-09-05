@@ -429,3 +429,19 @@ body {
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3) !important;
 }
 
+/* High-contrast overrides */
+.high-contrast {
+  --bg-primary: #0b0f1a;
+  --bg-secondary: #060913;
+  --bg-tertiary: #101826;
+  --text-primary: #ffffff;
+  --text-secondary: #e5e7eb;
+  --text-tertiary: #cbd5e1;
+  --border-color: #94a3b8;
+}
+
+.high-contrast body,
+.high-contrast #root {
+  background-color: #060913;
+}
+
