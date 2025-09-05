@@ -112,7 +112,7 @@ function Sidebar() {
             {boards.map(board => (
               <Link
                 key={board._id}
-                to={`/board/${board._id}`}
+                to={`/dashboard/board/${board._id}`}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -120,10 +120,10 @@ function Sidebar() {
                   padding: '8px 12px',
                   borderRadius: '6px',
                   textDecoration: 'none',
-                  color: location.pathname === `/board/${board._id}` ? (isDarkMode ? '#f9fafb' : '#3b82f6') : (isDarkMode ? '#d1d5db' : '#64748b'),
-                  backgroundColor: location.pathname === `/board/${board._id}` ? (isDarkMode ? '#374151' : '#eff6ff') : 'transparent',
+                  color: location.pathname === `/dashboard/board/${board._id}` ? (isDarkMode ? '#f9fafb' : '#3b82f6') : (isDarkMode ? '#d1d5db' : '#64748b'),
+                  backgroundColor: location.pathname === `/dashboard/board/${board._id}` ? (isDarkMode ? '#374151' : '#eff6ff') : 'transparent',
                   fontSize: '14px',
-                  fontWeight: location.pathname === `/board/${board._id}` ? '500' : '400'
+                  fontWeight: location.pathname === `/dashboard/board/${board._id}` ? '500' : '400'
                 }}
               >
                 <Folder size={16} />
