@@ -129,6 +129,11 @@ router.post('/ai-generate', async (req, res) => {
 
   } catch (error) {
     console.error('AI Board Generation Error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     res.status(500).json({ 
       message: 'Failed to generate AI board',
       error: error.message 

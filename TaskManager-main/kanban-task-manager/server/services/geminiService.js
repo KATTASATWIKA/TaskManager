@@ -2,8 +2,12 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 class GeminiService {
   constructor() {
-    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-05-20" });
+    const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GOOGLE_API_KEY or GEMINI_API_KEY environment variable is required');
+    }
+    this.genAI = new GoogleGenerativeAI(apiKey);
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   }
 
   async generateBoardStructure(prompt) {
