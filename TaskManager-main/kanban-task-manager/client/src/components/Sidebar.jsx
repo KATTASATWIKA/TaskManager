@@ -4,6 +4,7 @@ import { useTheme } from '../contexts/ThemeContext'
 import { boardsAPI } from '../api/client'
 import { useEffect, useState } from 'react'
 import { Plus, LayoutDashboard, Folder } from 'lucide-react'
+import CreateBoardModal from './CreateBoardModal'
 
 function Sidebar() {
   const location = useLocation()
@@ -11,6 +12,7 @@ function Sidebar() {
   const { isDarkMode } = useTheme()
   const [boards, setBoards] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showCreateBoard, setShowCreateBoard] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -29,10 +31,7 @@ function Sidebar() {
     }
   }
 
-  const createBoard = async () => {
-    const title = prompt('Enter board title:')
-    if (!title) return
-
+  const createBoard = async ({ title }) => {
     try {
       const response = await boardsAPI.create(title)
       // Handle the new response format with board and lists
@@ -42,6 +41,7 @@ function Sidebar() {
         // Fallback for backward compatibility
         setBoards(prev => [...prev, response.data])
       }
+      setShowCreateBoard(false)
     } catch (error) {
       console.error('Error creating board:', error)
       alert('Failed to create board')
@@ -90,7 +90,7 @@ function Sidebar() {
             Boards
           </h3>
           <button 
-            onClick={createBoard}
+            onClick={() => setShowCreateBoard(true)}
             style={{
               padding: '4px',
               border: 'none',
@@ -134,6 +134,12 @@ function Sidebar() {
         )}
       </div>
     </aside>
+    <CreateBoardModal 
+      open={showCreateBoard} 
+      onClose={() => setShowCreateBoard(false)} 
+      onCreate={createBoard}
+      isDarkMode={isDarkMode}
+    />
   )
 }
 

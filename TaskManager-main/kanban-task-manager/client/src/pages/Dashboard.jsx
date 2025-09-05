@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { boardsAPI } from '../api/client'
 import { Plus, Folder, Calendar, Star, Clock, AlertTriangle, X, RefreshCw } from 'lucide-react'
+import CreateBoardModal from '../components/CreateBoardModal'
 import { format } from 'date-fns'
 import { useTheme } from '../contexts/ThemeContext'
 
@@ -12,6 +13,7 @@ function Dashboard() {
   const [sortBy, setSortBy] = useState('recent') // recent, name, created
   const [urgentTasks, setUrgentTasks] = useState([])
   const [showNotifications, setShowNotifications] = useState(true)
+  const [showCreateBoard, setShowCreateBoard] = useState(false)
 
   useEffect(() => {
     loadBoards()
@@ -81,10 +83,7 @@ function Dashboard() {
     }
   }
 
-  const createBoard = async () => {
-    const title = prompt('Enter board title:')
-    if (!title) return
-
+  const createBoard = async ({ title }) => {
     try {
       const response = await boardsAPI.create(title)
       // Handle the new response format with board and lists
@@ -97,6 +96,7 @@ function Dashboard() {
         setBoards(prev => [...prev, response.data])
         setTimeout(() => loadUrgentTasks([...boards, response.data]), 1000)
       }
+      setShowCreateBoard(false)
     } catch (error) {
       console.error('Error creating board:', error)
       alert('Failed to create board')
@@ -135,6 +135,7 @@ function Dashboard() {
   const sortedBoards = sortBoards(boards)
 
   return (
+    <>
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
         <div>
@@ -145,7 +146,7 @@ function Dashboard() {
         </div>
         
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button onClick={createBoard} className="btn btn-primary">
+          <button onClick={() => setShowCreateBoard(true)} className="btn btn-primary">
             <Plus size={16} />
             New Board
           </button>
@@ -437,7 +438,7 @@ function Dashboard() {
           <p style={{ color: isDarkMode ? '#d1d5db' : '#64748b', marginBottom: '24px' }}>
             Create your first board to start organizing your tasks
           </p>
-          <button onClick={createBoard} className="btn btn-primary">
+          <button onClick={() => setShowCreateBoard(true)} className="btn btn-primary">
             <Plus size={16} />
             Create Board
           </button>
@@ -521,6 +522,13 @@ function Dashboard() {
         </div>
       )}
     </div>
+    <CreateBoardModal 
+      open={showCreateBoard} 
+      onClose={() => setShowCreateBoard(false)} 
+      onCreate={createBoard}
+      isDarkMode={isDarkMode}
+    />
+    </>
   )
 }
 
