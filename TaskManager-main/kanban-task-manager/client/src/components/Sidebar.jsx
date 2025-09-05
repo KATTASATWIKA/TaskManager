@@ -49,6 +49,7 @@ function Sidebar() {
   }
 
   return (
+    <>
     <aside style={{
       width: '280px',
       backgroundColor: isDarkMode ? '#111827' : 'white',
@@ -140,6 +141,7 @@ function Sidebar() {
       onCreate={createBoard}
       isDarkMode={isDarkMode}
     />
+    </>
   )
 }
 
