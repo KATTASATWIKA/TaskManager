@@ -204,12 +204,34 @@ function TaskCard({ task, onClick, isDragging }) {
 
       {/* Subtasks summary */}
       {task.subtasks && task.subtasks.length > 0 && (
-        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>
-          {(() => {
-            const done = task.subtasks.filter(s => s.done).length
-            const total = task.subtasks.length
-            return `${done}/${total} subtasks`
-          })()}
+        <div style={{ marginBottom: '6px' }}>
+          <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '4px' }}>
+            {(() => {
+              const done = task.subtasks.filter(s => s.done).length
+              const total = task.subtasks.length
+              return `${done}/${total} subtasks`
+            })()}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {task.subtasks.slice(0, 3).map((st, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  width: 14, height: 14, borderRadius: 3,
+                  border: '1px solid #cbd5e1', backgroundColor: st.done ? '#b6e5d8' : '#ffffff',
+                  color: st.done ? '#065f46' : '#94a3b8', fontSize: 10, fontWeight: 700
+                }}>
+                  {st.done ? '✓' : ''}
+                </span>
+                <span style={{ fontSize: 11, color: st.done ? '#64748b' : '#475569', textDecoration: st.done ? 'line-through' : 'none' }}>
+                  {st.title}
+                </span>
+              </div>
+            ))}
+            {task.subtasks.length > 3 && (
+              <div style={{ fontSize: 11, color: '#64748b' }}>+{task.subtasks.length - 3} more</div>
+            )}
+          </div>
         </div>
       )}
 
