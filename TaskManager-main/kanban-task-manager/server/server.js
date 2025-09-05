@@ -7,7 +7,7 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-	origin: 'https://taskmanager87.netlify.app',
+	origin: 'https://taskmanagement15.netlify.app',
 	credentials: true,
 }));
 app.use(express.json());
