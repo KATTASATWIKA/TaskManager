@@ -10,13 +10,13 @@ router.use(auth);
 
 
 router.get('/', async (req,res) => {
-const boards = await Board.find({ owner: req.userId }).select('title createdAt updatedAt listOrder');
+const boards = await Board.find({ owner: req.userId }).select('title description createdAt updatedAt listOrder');
 res.json(boards);
 });
 
 
 router.post('/', async (req,res) => {
-const board = await Board.create({ owner: req.userId, title: req.body.title, listOrder: [] });
+const board = await Board.create({ owner: req.userId, title: req.body.title, description: req.body.description, listOrder: [] });
 
 // Return empty board - user can create lists by clicking "Add List"
 res.status(201).json({ board, lists: [] });
@@ -33,10 +33,10 @@ res.json({ board, lists, tasks });
 
 
 router.patch('/:id', async (req,res) => {
-const { title, listOrder } = req.body;
+const { title, description, listOrder } = req.body;
 const board = await Board.findOneAndUpdate(
 { _id: req.params.id, owner: req.userId },
-{ ...(title !== undefined && { title }), ...(listOrder !== undefined && { listOrder }) },
+{ ...(title !== undefined && { title }), ...(description !== undefined && { description }), ...(listOrder !== undefined && { listOrder }) },
 { new: true }
 );
 if (!board) return res.status(404).json({ message: 'Not found' });

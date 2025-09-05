@@ -83,9 +83,9 @@ function Dashboard() {
     }
   }
 
-  const createBoard = async ({ title }) => {
+  const createBoard = async ({ title, description }) => {
     try {
-      const response = await boardsAPI.create(title)
+      const response = await boardsAPI.create({ title, description })
       // Handle the new response format with board and lists
       if (response.data.board) {
         setBoards(prev => [...prev, response.data.board])
@@ -492,6 +492,12 @@ function Dashboard() {
                 </h3>
               </div>
               
+              {board.description && (
+                <p style={{ color: isDarkMode ? '#d1d5db' : '#64748b', fontSize: '13px', margin: '0 0 8px 0' }}>
+                  {board.description}
+                </p>
+              )}
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: isDarkMode ? '#d1d5db' : '#64748b', fontSize: '14px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Calendar size={16} />
