@@ -1,4 +1,4 @@
-import { format, isAfter, isBefore, isToday, isTomorrow } from 'date-fns'
+import { format, isAfter, isToday, isTomorrow } from 'date-fns'
 import { Calendar, Flag, Tag } from 'lucide-react'
 
 function TaskCard({ task, onClick, isDragging, onToggleSubtasks }) {
@@ -29,7 +29,6 @@ function TaskCard({ task, onClick, isDragging, onToggleSubtasks }) {
       const date = new Date(dueDate)
       if (isToday(date)) return { text: 'Today', color: '#dc2626', bgColor: '#fef2f2' }
       if (isTomorrow(date)) return { text: 'Tomorrow', color: '#a16207', bgColor: '#fefce8' }
-      if (isBefore(date, new Date())) return { text: 'Overdue', color: '#dc2626', bgColor: '#fef2f2' }
       if (isAfter(date, new Date())) return { text: format(date, 'MMM d'), color: '#64748b', bgColor: '#f8fafc' }
     } catch (error) {
       console.error('Error parsing due date:', error)
