@@ -31,9 +31,9 @@ function Sidebar() {
     }
   }
 
-  const createBoard = async ({ title }) => {
+  const createBoard = async ({ title, description }) => {
     try {
-      const response = await boardsAPI.create(title)
+      const response = await boardsAPI.create({ title, description })
       // Handle the new response format with board and lists
       if (response.data.board) {
         setBoards(prev => [...prev, response.data.board])

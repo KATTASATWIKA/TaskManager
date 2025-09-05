@@ -423,9 +423,16 @@ function Board() {
             <ArrowLeft size={16} />
             Back
           </button>
-          <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1e293b' }}>
-            {board.title}
-          </h1>
+          <div>
+            <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1e293b', margin: 0 }}>
+              {board.title}
+            </h1>
+            {board.description && (
+              <p style={{ margin: 0, marginTop: 4, color: '#64748b', maxWidth: 720 }}>
+                {board.description}
+              </p>
+            )}
+          </div>
         </div>
         
         <div style={{ display: 'flex', gap: '8px' }}>
