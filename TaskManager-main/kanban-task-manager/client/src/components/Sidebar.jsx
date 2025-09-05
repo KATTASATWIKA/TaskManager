@@ -81,6 +81,26 @@ function Sidebar() {
       </div>
 
       <div>
+        <Link 
+          to="/dashboard/calendar" 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            color: location.pathname === '/dashboard/calendar' ? (isDarkMode ? '#f9fafb' : '#3b82f6') : (isDarkMode ? '#d1d5db' : '#64748b'),
+            backgroundColor: location.pathname === '/dashboard/calendar' ? (isDarkMode ? '#374151' : '#eff6ff') : 'transparent',
+            fontWeight: location.pathname === '/dashboard/calendar' ? '500' : '400'
+          }}
+        >
+          <span role="img" aria-label="calendar">🗓️</span>
+          Calendar
+        </Link>
+      </div>
+
+      <div>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',

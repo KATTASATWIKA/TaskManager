@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Board from './pages/Board'
+import Calendar from './pages/Calendar'
 import Layout from './components/Layout'
 
 import Landing from './pages/Landing'
@@ -56,6 +57,7 @@ function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="board/:id" element={<Board />} />
+          <Route path="calendar" element={<Calendar />} />
         </Route>
 
         {/* Catch-all */}
