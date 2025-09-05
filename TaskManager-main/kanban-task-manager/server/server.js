@@ -6,6 +6,9 @@ require('dotenv').config();
 
 const app = express();
 
+// Trust proxy for Render/Netlify to set secure cookies over HTTPS
+app.set('trust proxy', 1);
+
 app.use(cors({
 	origin: 'https://taskmanagement15.netlify.app',
 	credentials: true,

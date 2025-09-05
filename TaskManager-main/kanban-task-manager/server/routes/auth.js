@@ -12,7 +12,13 @@ const passwordHash = await bcrypt.hash(password, 10);
 const user = await User.create({ name, email, passwordHash });
 const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 const isProd = process.env.NODE_ENV === 'production';
-res.cookie('accessToken', token, { httpOnly: true, sameSite: isProd ? 'strict' : 'lax', secure: isProd, maxAge: 7*24*60*60*1000 });
+res.cookie('accessToken', token, {
+  httpOnly: true,
+  sameSite: isProd ? 'none' : 'lax',
+  secure: isProd,
+  maxAge: 7*24*60*60*1000,
+  path: '/',
+});
 res.status(201).json({ id: user._id, email: user.email, name: user.name });
 });
 
@@ -25,7 +31,13 @@ const ok = await user.verifyPassword(password);
 if (!ok) return res.status(401).json({ message: 'Invalid credentials' });
 const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 const isProd = process.env.NODE_ENV === 'production';
-res.cookie('accessToken', token, { httpOnly: true, sameSite: isProd ? 'strict' : 'lax', secure: isProd, maxAge: 7*24*60*60*1000 });
+res.cookie('accessToken', token, {
+  httpOnly: true,
+  sameSite: isProd ? 'none' : 'lax',
+  secure: isProd,
+  maxAge: 7*24*60*60*1000,
+  path: '/',
+});
 res.json({ id: user._id, email: user.email, name: user.name });
 });
 
@@ -45,8 +57,14 @@ res.status(401).json({ message: 'Invalid token' });
 
 
 router.post('/logout', (req,res) => {
-res.clearCookie('accessToken');
-res.status(204).end();
+  const isProd = process.env.NODE_ENV === 'production';
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
+    path: '/',
+  });
+  res.status(204).end();
 });
 
 
