@@ -26,9 +26,9 @@ client.interceptors.response.use(
     return response
   },
   (error) => {
+    // Just log 401 errors, don't redirect automatically
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      window.location.href = '/login'
+      console.log('Unauthorized request:', error.config.url)
     }
     return Promise.reject(error)
   }

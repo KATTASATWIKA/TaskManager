@@ -6,16 +6,20 @@ const useAuthStore = create((set, get) => ({
   loading: true,
 
   // Initialize auth state
-  init: async () => {
-    set({ loading: true })
-    try {
-      const response = await authAPI.getMe()
-      set({ user: response.data, loading: false })
-    } catch (error) {
-      console.log('Auth check failed:', error.response?.status)
-      set({ user: null, loading: false })
-    }
-  },
+  // Initialize auth state
+init: async () => {
+  console.log('🔍 Auth init starting...')
+  set({ loading: true })
+  try {
+    console.log('📡 Calling /auth/me...')
+    const response = await authAPI.getMe()
+    console.log('✅ Auth success:', response.data)
+    set({ user: response.data, loading: false })
+  } catch (error) {
+    console.log('❌ Auth check failed:', error.response?.status, error.response?.data)
+    set({ user: null, loading: false })
+  }
+},
 
   // Login
   login: async (email, password) => {
