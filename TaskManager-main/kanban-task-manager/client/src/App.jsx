@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Board from './pages/Board'
 import Layout from './components/Layout'
+
 import Landing from './pages/Landing'
 
 function ProtectedRoute({ user, children }) {
@@ -46,14 +47,14 @@ function App() {
 
         {/* Authenticated routes */}
         <Route 
-          path="/" 
+          path="/dashboard" 
           element={
             <ProtectedRoute user={user}>
               <Layout />
             </ProtectedRoute>
           }
         >
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
           <Route path="board/:id" element={<Board />} />
         </Route>
 
