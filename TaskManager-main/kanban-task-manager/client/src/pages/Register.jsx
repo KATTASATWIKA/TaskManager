@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '../store/auth'
 import { Link } from 'react-router-dom'
-import { Mail, Lock, User, UserPlus } from 'lucide-react'
+import { Mail, Lock, User, UserPlus, Eye, EyeOff, CheckCircle } from 'lucide-react'
 
 function Register() {
   const [name, setName] = useState('')
@@ -9,6 +9,8 @@ function Register() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   
   const { register } = useAuthStore()
 
@@ -16,10 +18,13 @@ function Register() {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setSuccess('')
 
     const result = await register(name, email, password)
     
-    if (!result.success) {
+    if (result.success) {
+      setSuccess('Account created successfully! Redirecting...')
+    } else {
       setError(result.error)
     }
     
@@ -60,6 +65,24 @@ function Register() {
             fontSize: '14px'
           }}>
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div style={{
+            padding: '12px',
+            backgroundColor: '#f0fdf4',
+            border: '1px solid #bbf7d0',
+            borderRadius: '6px',
+            color: '#166534',
+            marginBottom: '16px',
+            fontSize: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <CheckCircle size={16} />
+            {success}
           </div>
         )}
 
@@ -107,16 +130,38 @@ function Register() {
             <div style={{ position: 'relative' }}>
               <Lock size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input"
-                style={{ paddingLeft: '44px', width: '100%' }}
+                style={{ paddingLeft: '44px', paddingRight: '44px', width: '100%' }}
                 placeholder="Create a password"
                 required
                 minLength={6}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#9ca3af',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
+            <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
+              Password must be at least 6 characters long
+            </p>
           </div>
 
           <button
