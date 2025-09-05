@@ -83,18 +83,27 @@ function Dashboard() {
     }
   }
 
-  const createBoard = async ({ title, description }) => {
+  const createBoard = async (boardData) => {
     try {
-      const response = await boardsAPI.create({ title, description })
-      // Handle the new response format with board and lists
-      if (response.data.board) {
-        setBoards(prev => [...prev, response.data.board])
+      // Handle both manual and AI-generated boards
+      if (boardData.board) {
+        // AI-generated board response
+        setBoards(prev => [...prev, boardData.board])
         // Refresh urgent tasks after creating a new board
-        setTimeout(() => loadUrgentTasks([...boards, response.data.board]), 1000)
-      } else {
-        // Fallback for backward compatibility
-        setBoards(prev => [...prev, response.data])
-        setTimeout(() => loadUrgentTasks([...boards, response.data]), 1000)
+        setTimeout(() => loadUrgentTasks([...boards, boardData.board]), 1000)
+      } else if (boardData.title) {
+        // Manual board creation
+        const response = await boardsAPI.create({ title: boardData.title, description: boardData.description })
+        // Handle the new response format with board and lists
+        if (response.data.board) {
+          setBoards(prev => [...prev, response.data.board])
+          // Refresh urgent tasks after creating a new board
+          setTimeout(() => loadUrgentTasks([...boards, response.data.board]), 1000)
+        } else {
+          // Fallback for backward compatibility
+          setBoards(prev => [...prev, response.data])
+          setTimeout(() => loadUrgentTasks([...boards, response.data]), 1000)
+        }
       }
       setShowCreateBoard(false)
     } catch (error) {

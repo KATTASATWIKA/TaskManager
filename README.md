@@ -1,242 +1,194 @@
-# Task Manager - Kanban-Style Project Management
+# Task Manager (Kanban)
 
-A full-stack task management application with drag-and-drop functionality built using React, Node.js, Express, and MongoDB. Features a modern Kanban-style interface for organizing projects and tasks efficiently.
+Full-stack Kanban-style task manager with boards, lists, tasks, subtasks, calendar view, JWT auth, and dark mode. Frontend (Vite + React) deployed on Netlify; backend (Express + MongoDB/Mongoose) on Render.
 
-## 🚀 Features
+## Features
 
-### Core Functionality
-- **Multi-Board Management**: Create and manage multiple project boards
-- **Drag & Drop Interface**: Seamlessly move tasks between lists and reorder items
-- **Task Lists**: Organize tasks in customizable lists (To Do, In Progress, Done, etc.)
-- **Task Management**: Create, edit, delete, and prioritize tasks
-- **Real-time Updates**: Auto-save functionality with visual feedback
+- Authentication
+  - Register/Login/Logout with JWT (httpOnly cookie)
+  - Persistent auth via `/api/auth/me`
+- Boards
+  - Create boards with title + description
+  - **AI-powered board generation** using Gemini API
+  - Dashboard shows boards with descriptions
+  - Default lists removed; you start empty
+- Lists and Tasks
+  - Drag-and-drop for lists and tasks
+  - Quick add task with priority, due date, labels
+  - Task modal to edit title, description, due date, priority, labels
+  - Subtasks with checkboxes and progress; directly toggle from task cards
+- **AI Board Generation**
+  - Generate complete board structures from natural language prompts
+  - AI creates lists, tasks, subtasks, priorities, and due dates
+  - Powered by Google Gemini API
+- Calendar View
+  - Month/Week views aggregating due-dated tasks across all boards
+  - Drag task to a day to reschedule (updates dueDate)
+- Theming
+  - Light mode by default
+  - Smooth transitions and full-viewport dark mode coverage
+- Deployment-ready
+  - Netlify (client) + Render (server)
+  - CORS and cookies configured for cross-site auth
 
-### Task Features
-- **Priority Levels**: Urgent, High, Medium, Low priority with color coding
-- **Due Dates**: Set and track task deadlines with overdue indicators
-- **Labels**: Organize tasks with custom labels and tags
-- **Descriptions**: Add detailed descriptions to tasks
-- **Task Modal**: Comprehensive task editing interface
+## Tech Stack
 
-### User Experience
-- **Responsive Design**: Modern, mobile-friendly interface
-- **Dark/Light Themes**: Theme switching capability
-- **Smart Notifications**: Urgent task alerts on dashboard
-- **Board Templates**: Quick setup with default or project-specific lists
-- **Layout Persistence**: Automatically saves board and task arrangements
+- Frontend: React (Vite), Zustand, React Router, Axios
+- Backend: Node.js, Express, Mongoose (MongoDB)
+- Auth: JWT (cookies), bcrypt
+- AI: Google Gemini API for board generation
+- UI: Lucide icons, custom CSS
 
-## 🛠 Technology Stack
+## Monorepo Structure
 
-### Frontend
-- **React 18** with Hooks
-- **React Router** for navigation
-- **React Beautiful DnD** for drag-and-drop functionality
-- **Lucide React** for icons
-- **Date-fns** for date manipulation
-- **Custom CSS** with modern styling
-
-### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **JWT Authentication** for secure user sessions
-- **RESTful API** architecture
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (local or Atlas)
-- npm or yarn
-
-### Setup Instructions
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd task-manager
-   ```
-
-2. **Install dependencies**
-   ```bash
-   # Install backend dependencies
-   cd backend
-   npm install
-   
-   # Install frontend dependencies
-   cd ../frontend
-   npm install
-   ```
-
-3. **Environment Configuration**
-   
-   Create `.env` file in the backend directory:
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/taskmanager
-   JWT_SECRET=your-super-secret-jwt-key
-   NODE_ENV=development
-   ```
-
-4. **Start MongoDB**
-   ```bash
-   # If using local MongoDB
-   mongod
-   ```
-
-5. **Run the application**
-   ```bash
-   # Start backend server (from backend directory)
-   npm run dev
-   
-   # Start frontend development server (from frontend directory)
-   npm start
-   ```
-
-6. **Access the application**
-   - Frontend: `http://localhost:3000`
-   - Backend API: `http://localhost:5000`
-
-## 🗄 Database Schema
-
-### Collections
-
-#### Users
-```javascript
-{
-  _id: ObjectId,
-  username: String,
-  email: String,
-  password: String (hashed),
-  createdAt: Date,
-  updatedAt: Date
-}
+```
+kanban-task-manager/
+  client/                 # Vite React frontend
+  server/                 # Express + Mongoose backend
 ```
 
-#### Boards
-```javascript
-{
-  _id: ObjectId,
-  title: String,
-  owner: ObjectId (User reference),
-  listOrder: [ObjectId], // Order of lists
-  createdAt: Date,
-  updatedAt: Date
-}
+## Environment Variables
+
+Backend (`server/.env`):
+- MONGODB_URI=your_mongodb_atlas_uri
+- JWT_SECRET=your_jwt_secret
+- CLIENT_URL=https://your-netlify-site (no trailing slash)
+- PORT=5000 (or Render default)
+- GOOGLE_API_KEY=your_google_api_key (for AI board generation)
+
+Frontend (`client/.env`):
+- VITE_API_URL=https://your-render-backend.onrender.com/api
+
+Note:
+- Do not include trailing slashes in `CLIENT_URL`.
+- `VITE_API_URL` must point to `/api`.
+
+## Local Development
+
+1) Backend
+- Create `server/.env` (see above)
+- Install and run:
+```
+cd server
+npm install
+npm start
 ```
 
-#### TaskLists
-```javascript
-{
-  _id: ObjectId,
-  title: String,
-  board: ObjectId (Board reference),
-  taskOrder: [ObjectId], // Order of tasks
-  createdAt: Date,
-  updatedAt: Date
-}
+2) Frontend
+- Create `client/.env` with:
+```
+VITE_API_URL=http://localhost:5000/api
+```
+- Install and run:
+```
+cd client
+npm install
+npm run dev
 ```
 
-#### Tasks
-```javascript
-{
-  _id: ObjectId,
-  title: String,
-  description: String,
-  list: ObjectId (TaskList reference),
-  priority: String, // 'low', 'medium', 'high', 'urgent'
-  dueDate: Date,
-  labels: [String],
-  createdAt: Date,
-  updatedAt: Date
-}
+Open http://localhost:5173
+
+## Production Deployment
+
+Frontend (Netlify):
+- Base directory: `TaskManager-main/kanban-task-manager/client`
+- Build command: `npm run build`
+- Publish: `dist`
+- Env: `VITE_API_URL=https://your-render-backend.onrender.com/api`
+- Redirects (netlify.toml):
+```
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 ```
 
-## 🎯 API Endpoints
+Backend (Render):
+- Root directory: `TaskManager-main/kanban-task-manager/server`
+- Build command: `npm install`
+- Start command: `node server.js` (or `npm start` if defined)
+- Env:
+  - `MONGODB_URI`
+  - `JWT_SECRET`
+  - `CLIENT_URL=https://your-netlify-site` (no trailing slash)
+  - `GOOGLE_API_KEY` (for AI board generation)
+  - `NODE_ENV=production`
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
+CORS/Cookies:
+- Server trusts proxy and sets cookies with `SameSite=None; Secure` in production.
+- Client Axios is configured with `withCredentials: true`.
 
-### Boards
-- `GET /api/boards` - Get all user boards
-- `POST /api/boards` - Create new board
-- `GET /api/boards/:id` - Get board with lists and tasks
-- `PUT /api/boards/:id` - Update board
-- `DELETE /api/boards/:id` - Delete board
-- `POST /api/boards/:id/lists` - Create list in board
+## Key Routes
 
-### Lists
-- `PUT /api/lists/:id` - Update list
-- `DELETE /api/lists/:id` - Delete list
+Frontend (React Router):
+- `/` Landing (unauthenticated)
+- `/login`, `/register`
+- `/dashboard` (boards overview)
+- `/dashboard/board/:id` (board view with lists + tasks)
+- `/dashboard/calendar` (calendar with due-dated tasks)
 
-### Tasks
-- `POST /api/tasks` - Create task
-- `PUT /api/tasks/:id` - Update task
-- `DELETE /api/tasks/:id` - Delete task
+Backend (Express, prefixed with `/api`):
+- Auth: `/auth/register`, `/auth/login`, `/auth/logout`, `/auth/me`
+- Boards: `/boards` (GET, POST), `/boards/:id` (GET, PATCH, DELETE), `/boards/:id/lists` (POST)
+- AI: `/boards/ai-generate` (POST), `/boards/:id/ai-suggest-tasks` (POST)
+- Lists: `/lists/:id` (PATCH, DELETE)
+- Tasks: `/tasks/lists/:listId/tasks` (POST), `/tasks/:taskId` (PATCH, DELETE)
 
+## Notable Implementation Details
 
-## 🚦 Usage Guide
+- Removed default list creation on new boards; backend returns empty board + empty lists.
+- Enhanced `ThemeContext` to default to light; dark mode applies to full viewport and scrollbars.
+- `VITE_API_URL` used in Axios base URL for robust prod/dev switching.
+- React Router routes use `/dashboard/board/:id` (avoid path conflicts).
+- Fixes for redirect loops by ensuring `/api/auth/me` returns 401 for missing/invalid tokens.
+- Cross-site cookies for Netlify → Render using `SameSite=None; Secure`; `trust proxy` enabled.
 
-### Getting Started
-1. **Register/Login**: Create account or sign in
-2. **Create Board**: Click "New Board" on dashboard
-3. **Add Lists**: Use quick templates or create custom lists
-4. **Create Tasks**: Click "Add a task" in any list
-5. **Organize**: Drag tasks between lists and reorder as needed
+## Common Troubleshooting
 
-### Board Management
-- **Default Lists**: To Do, In Progress, Done
-- **Quick Lists**: Backlog, Planning, Development, Testing, Review, Deployment
-- **Custom Lists**: Create lists specific to your workflow
+- 401 Unauthorized on API
+  - Ensure `CLIENT_URL` on backend exactly matches Netlify domain (no trailing slash)
+  - Ensure `VITE_API_URL` points to `https://<render-app>.onrender.com/api`
+  - Cookies must be sent: Axios uses `withCredentials: true`
+- CORS preflight fails
+  - Origin mismatch (check trailing slash, correct Netlify domain)
+- “Cannot GET /api/…” in browser
+  - `/api` is a prefix; open actual endpoints like `/api/auth/me`
+- Vercel/Netlify build issues
+  - `vite` and plugin are dependencies so builds run in prod
+- Local PowerShell `&&` errors
+  - Use separate lines instead of `&&` in PowerShell
 
-### Task Organization
-- **Priorities**: Set task priority levels with visual indicators
-- **Due Dates**: Track deadlines with smart date formatting
-- **Labels**: Tag tasks for better organization
-- **Descriptions**: Add detailed task information
+## Scripts
 
-## 🔧 Development
+Client:
+- `npm run dev` - dev server
+- `npm run build` - prod build
+- `npm run preview` - preview build
 
-5. **Run the application**
-   ```bash
-   # Start backend server (from backend directory)
-   node server.js
-   
-   # Start frontend development server (from frontend directory)
-   npm run dev
-   ```
+Server:
+- `npm start` - start backend
 
-### Running Tests
-```bash
-# Frontend tests
-cd frontend && npm test
+## UI Walkthrough
 
-# Backend tests  
-cd backend && npm test
-```
+- Dashboard
+  - “New Board” opens modal with Title + Description
+  - Cards show title + description + created/updated dates
+- Board
+  - Title and description in header
+  - Add Quick/Default lists
+  - Drag lists/tasks
+  - Quick add tasks with priority/due date/labels
+  - Subtasks toggle directly from task card; edit all fields in modal
+- Calendar
+  - Month/Week switcher
+  - Drag tasks between days to update dueDate
 
-### Building for Production
-```bash
-# Build frontend
-cd frontend && npm run build
+## Security Notes
 
-# Start production server
-cd backend && node server.js
-```
+- JWT in httpOnly cookie to prevent XSS access
+- `SameSite=None; Secure` with `trust proxy` for cross-site usage over HTTPS
+- Password hashing with bcrypt
 
-## 🚀 Future Enhancements
+## License
 
-- [ ] Real-time collaboration
-- [ ] File attachments
-- [ ] Task comments and activity log
-- [ ] Advanced filtering and search
-- [ ] Time tracking
-- [ ] Team management
-- [ ] Board templates
-- [ ] Notifications system
-- [ ] Mobile app version
-
-
-
-Built with ❤️ using React and Node.js
+MIT

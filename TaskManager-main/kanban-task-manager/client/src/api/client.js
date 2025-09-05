@@ -50,6 +50,8 @@ export const boardsAPI = {
   update: (id, data) => client.patch(`/boards/${id}`, data),
   delete: (id) => client.delete(`/boards/${id}`),
   createList: (boardId, title) => client.post(`/boards/${boardId}/lists`, { title }),
+  generateAI: (prompt) => client.post('/boards/ai-generate', { prompt }),
+  getAISuggestions: (boardId) => client.post(`/boards/${boardId}/ai-suggest-tasks`),
 }
 
 // Lists API
