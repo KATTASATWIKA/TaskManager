@@ -212,11 +212,23 @@ function TaskCard({ task, onClick, isDragging }) {
           fontSize: '10px',
           color: '#64748b'
         }}>
-          {task.description && (
-            <span title="Has description">ðŸ“</span>
-          )}
           {task.labels && task.labels.length > 0 && (
-            <span title={`${task.labels.length} labels`}>ðŸ·ï¸ {task.labels.length}</span>
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+              {task.labels.slice(0, 2).map((label, index) => (
+                <span key={index} style={{
+                  padding: '2px 6px',
+                  backgroundColor: '#f1f5f9',
+                  color: '#475569',
+                  borderRadius: '4px',
+                  border: '1px solid #e2e8f0',
+                  fontSize: '10px',
+                  fontWeight: '500'
+                }}>{label}</span>
+              ))}
+              {task.labels.length > 2 && (
+                <span style={{ fontSize: '10px', color: '#64748b' }}>+{task.labels.length - 2}</span>
+              )}
+            </div>
           )}
         </div>
       </div>
